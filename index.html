@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Costos Pastelera</title>
+  <style>
+    :root {
+      --primary: #d81b60;
+      --primary-hover: #c2185b;
+      --bg-color: #fce4ec;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --border-color: #f48fb1;
+      --accent: #8e24aa;
+      --accent-light: #f3e5f5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 25px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 15px;
+    }
+
+    header h1 {
+      color: var(--primary);
+      font-size: 2em;
+    }
+
+    header p {
+      color: #666;
+      font-size: 0.95em;
+    }
+
+    .section {
+      margin-bottom: 25px;
+    }
+
+    .section-title {
+      font-size: 1.2em;
+      color: var(--primary);
+      margin-bottom: 12px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-group label {
+      font-size: 0.85em;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    .highlight-group {
+      background-color: #fff3e0;
+      border: 1px solid #ffe0b2;
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    .highlight-group label {
+      color: #e65100;
+    }
+
+    input, select, button {
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95em;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: #fff0f5;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.85em;
+    }
+
+    tfoot td {
+      background-color: #f9f9f9;
+      font-weight: bold;
+      border-top: 2px solid var(--border-color);
+    }
+
+    .btn {
+      cursor: pointer;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: #757575;
+    }
+
+    .btn-secondary:hover {
+      background-color: #616161;
+    }
+
+    .btn-danger {
+      background-color: #e53935;
+      padding: 6px 10px;
+    }
+
+    .btn-danger:hover {
+      background-color: #c62828;
+    }
+
+    .btn-add {
+      margin-top: 10px;
+      background-color: #4caf50;
+    }
+
+    .btn-add:hover {
+      background-color: #388e3c;
+    }
+
+    .subtotal-badge {
+      background-color: var(--accent-light);
+      color: var(--accent);
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 0.9em;
+      font-weight: bold;
+    }
+
+    .results-card {
+      background-color: var(--accent-light);
+      border: 1px solid #e1bee7;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .result-box {
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .result-box span {
+      display: block;
+      font-size: 0.85em;
+      color: #666;
+    }
+
+    .result-box strong {
+      display: block;
+      font-size: 1.3em;
+      color: var(--accent);
+      margin-top: 5px;
+    }
+
+    .result-box.highlight strong {
+      color: var(--primary);
+      font-size: 1.5em;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .saved-recipes {
+      margin-top: 30px;
+      border-top: 2px dashed #ddd;
+      padding-top: 20px;
+    }
+
+    @media print {
+      body { background-color: white; }
+      .container { box-shadow: none; max-width: 100%; }
+      .btn, .actions, .saved-recipes, .btn-danger { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Calculadora de Costos Pastelera 🎂</h1>
+      <p>Calcula el costo exacto de tus productos y establece tu precio de venta ideal</p>
+    </header>
+
+    <!-- 1. Datos generales de la receta -->
+    <div class="section">
+      <h2 class="section-title">1. Información del Producto</h2>
+      <div class="form-grid">
+        <div class="input-group">
+          <label for="recipeName">Nombre del Producto / Receta</label>
+          <input type="text" id="recipeName" value="Alfajor Artesanal">
+        </div>
+        <div class="input-group">
+          <label for="profitMargin">Margen de Ganancia (%)</label>
+          <input type="number" id="profitMargin" value="50" min="0" oninput="calcularTotales()">
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Lista de Ingredientes (Receta Base para 1 Unidad) -->
+    <div class="section">
+      <div class="section-title">
+        <span>2. Ingredientes e Insumos Directos (Por Unidad)</span>
+        <span class="subtotal-badge">Subtotal Insumos (1 Unid): <span id="badgeSubtotalIngredients">$0</span></span>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Ingrediente</th>
+              <th>Precio Compra ($)</th>
+              <th>Cant. Comprada</th>
+              <th>Unidad Compra</th>
+              <th>Cant. Usada (1 Unid)</th>
+              <th>Unidad Uso</th>
+              <th>Costo ($)</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="ingredientsList">
+            <!-- Filas dinámicas -->
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="6" style="text-align: right;">Costo Insumos por 1 Unidad:</td>
+              <td><strong id="tableSubtotalIngredients">$0</strong></td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <button class="btn btn-add" onclick="addIngredientRow()">+ Agregar Ingrediente</button>
+    </div>
+
+    <!-- 3. Rendimiento / Cantidad a Producir (AQUÍ UBICADO) -->
+    <div class="section">
+      <div class="form-grid">
+        <div class="input-group highlight-group">
+          <label for="unitsProduced">📦 ¿Cuántas unidades vas a preparar en esta tanda/lote?</label>
+          <input type="number" id="unitsProduced" value="4" min="1" oninput="calcularTotales()" style="font-weight: bold; font-size: 1.1em; color: #d81b60;">
+        </div>
+        <div class="input-group highlight-group" style="background-color: #e8f5e9; border-color: #c8e6c9;">
+          <label style="color: #2e7d32;">💰 Costo Total de Insumos para la Tanda (<span id="countUnitsLabel">4</span> unidades):</label>
+          <span id="batchIngredientsTotal" style="font-size: 1.3em; font-weight: bold; color: #2e7d32; margin-top: 5px;">$0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Módulo de Empaques y Presentación -->
+    <div class="section">
+      <div class="section-title">
+        <span>4. Empaques, Bolsas y Presentación (Por Unidad de Venta)</span>
+        <span class="subtotal-badge">Subtotal Empaques: <span id="badgeSubtotalPackaging">$0</span></span>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Empaque / Detalle</th>
+              <th>Precio Paquete ($)</th>
+              <th>Cant. Paquete</th>
+              <th>Unidad</th>
+              <th>Cant. Usada (Por Unid)</th>
+              <th>Costo ($)</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="packagingList">
+            <!-- Filas dinámicas de empaque -->
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5" style="text-align: right;">Subtotal Empaques por Unidad:</td>
+              <td><strong id="tableSubtotalPackaging">$0</strong></td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <button class="btn btn-add" onclick="addPackagingRow()">+ Agregar Empaque / Detalle</button>
+    </div>
+
+    <!-- 5. Gastos Indirectos y Mano de Obra -->
+    <div class="section">
+      <h2 class="section-title">5. Gastos Indirectos y Mano de Obra</h2>
+      <div class="form-grid">
+        <div class="input-group">
+          <label for="overheadPercent">Servicios (% Gas/Luz/Agua s/Insumos)</label>
+          <input type="number" id="overheadPercent" value="10" min="0" oninput="calcularTotales()">
+        </div>
+        <div class="input-group">
+          <label for="laborHours">Horas de Trabajo para la Tanda</label>
+          <input type="number" id="laborHours" value="0.5" step="0.1" min="0" oninput="calcularTotales()">
+        </div>
+        <div class="input-group">
+          <label for="laborRate">Valor por Hora ($)</label>
+          <input type="number" id="laborRate" value="3000" min="0" oninput="calcularTotales()">
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Resultados General -->
+    <div class="results-card">
+      <h2 class="section-title" style="border:none; text-align:center;">📊 Resumen General de Costos y Precio Final</h2>
+      <div class="results-grid">
+        <div class="result-box">
+          <span>Insumos Lote (<span id="resUnitsLabel">4</span> u)</span>
+          <strong id="resIngredientsTotal">$0</strong>
+        </div>
+        <div class="result-box">
+          <span>Empaques Lote</span>
+          <strong id="resPackagingTotal">$0</strong>
+        </div>
+        <div class="result-box">
+          <span>Servicios + Trabajo</span>
+          <strong id="resOverheadTotal">$0</strong>
+        </div>
+        <div class="result-box">
+          <span>Costo Total Lote</span>
+          <strong id="resTotalBatch">$0</strong>
+        </div>
+        <div class="result-box">
+          <span>Costo Por 1 Unidad</span>
+          <strong id="resUnitCost">$0</strong>
+        </div>
+        <div class="result-box highlight">
+          <span>Precio Venta (Lote <span id="resUnitsLabel2">4</span> u)</span>
+          <strong id="resBatchPrice">$0</strong>
+        </div>
+        <div class="result-box highlight">
+          <span>Precio Venta (Por Unidad)</span>
+          <strong id="resUnitPrice">$0</strong>
+        </div>
+        <div class="result-box">
+          <span>Ganancia Total Lote</span>
+          <strong id="resBatchProfit">$0</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="actions">
+      <button class="btn" onclick="saveRecipe()">💾 Guardar Receta Completa</button>
+      <button class="btn btn-secondary" onclick="window.print()">🖨️ Imprimir / Exportar PDF</button>
+    </div>
+
+    <!-- Recetas Guardadas -->
+    <div class="saved-recipes">
+      <h2 class="section-title">📂 Recetas Guardadas</h2>
+      <div id="savedList">
+        <p style="color:#888;">No hay recetas guardadas en el navegador.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Arreglo de Ingredientes por defecto (1 unidad de alfajor)
+    let ingredients = [
+      { name: "Vainas / Galletas", buyPrice: 14500, buyAmount: 1200, buyUnit: "unid", usedAmount: 1, useUnit: "unid" },
+      { name: "Dulce de Leche / Manjar", buyPrice: 3800, buyAmount: 1, buyUnit: "kg", usedAmount: 8.75, useUnit: "g" },
+      { name: "Cobertura Chocolate", buyPrice: 7590, buyAmount: 1, buyUnit: "kg", usedAmount: 11.75, useUnit: "g" }
+    ];
+
+    // Arreglo de Empaques
+    let packagings = [
+      { name: "Bolsa Individual", buyPrice: 2400, buyAmount: 100, unit: "unid", usedAmount: 1 },
+      { name: "Sticker / Etiqueta", buyPrice: 1000, buyAmount: 100, unit: "unid", usedAmount: 1 }
+    ];
+
+    function redondearComercial(valor) {
+      return Math.round(valor);
+    }
+
+    function calculateIngredientCost(ing) {
+      if (!ing.buyAmount || ing.buyAmount <= 0) return 0;
+      let buyBase = ing.buyAmount;
+      if (ing.buyUnit === 'kg' || ing.buyUnit === 'l') buyBase = ing.buyAmount * 1000;
+
+      let useBase = ing.usedAmount;
+      if (ing.useUnit === 'kg' || ing.useUnit === 'l') useBase = ing.usedAmount * 1000;
+
+      return (ing.buyPrice / buyBase) * useBase;
+    }
+
+    function calculatePackagingCost(pack) {
+      if (!pack.buyAmount || pack.buyAmount <= 0) return 0;
+      return (pack.buyPrice / pack.buyAmount) * pack.usedAmount;
+    }
+
+    function renderIngredients() {
+      const tbody = document.getElementById("ingredientsList");
+      tbody.innerHTML = "";
+
+      ingredients.forEach((ing, index) => {
+        let cost = calculateIngredientCost(ing);
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><input type="text" value="${ing.name}" oninput="updateIng(${index}, 'name', this.value)"></td>
+          <td><input type="number" value="${ing.buyPrice}" style="width:90px" oninput="updateIng(${index}, 'buyPrice', this.value)"></td>
+          <td><input type="number" value="${ing.buyAmount}" style="width:80px" oninput="updateIng(${index}, 'buyAmount', this.value)"></td>
+          <td>
+            <select onchange="updateIng(${index}, 'buyUnit', this.value)">
+              <option value="kg" ${ing.buyUnit === 'kg' ? 'selected' : ''}>kg</option>
+              <option value="g" ${ing.buyUnit === 'g' ? 'selected' : ''}>g</option>
+              <option value="l" ${ing.buyUnit === 'l' ? 'selected' : ''}>l</option>
+              <option value="ml" ${ing.buyUnit === 'ml' ? 'selected' : ''}>ml</option>
+              <option value="unid" ${ing.buyUnit === 'unid' ? 'selected' : ''}>unid</option>
+            </select>
+          </td>
+          <td><input type="number" value="${ing.usedAmount}" style="width:80px" oninput="updateIng(${index}, 'usedAmount', this.value)"></td>
+          <td>
+            <select onchange="updateIng(${index}, 'useUnit', this.value)">
+              <option value="g" ${ing.useUnit === 'g' ? 'selected' : ''}>g</option>
+              <option value="kg" ${ing.useUnit === 'kg' ? 'selected' : ''}>kg</option>
+              <option value="ml" ${ing.useUnit === 'ml' ? 'selected' : ''}>ml</option>
+              <option value="l" ${ing.useUnit === 'l' ? 'selected' : ''}>l</option>
+              <option value="unid" ${ing.useUnit === 'unid' ? 'selected' : ''}>unid</option>
+            </select>
+          </td>
+          <td><strong id="cost-ing-${index}">$${cost.toFixed(2)}</strong></td>
+          <td><button class="btn btn-danger" onclick="removeIngredient(${index})">X</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      calcularTotales();
+    }
+
+    function renderPackagings() {
+      const tbody = document.getElementById("packagingList");
+      tbody.innerHTML = "";
+
+      packagings.forEach((pack, index) => {
+        let cost = calculatePackagingCost(pack);
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><input type="text" value="${pack.name}" oninput="updatePack(${index}, 'name', this.value)"></td>
+          <td><input type="number" value="${pack.buyPrice}" style="width:90px" oninput="updatePack(${index}, 'buyPrice', this.value)"></td>
+          <td><input type="number" value="${pack.buyAmount}" style="width:80px" oninput="updatePack(${index}, 'buyAmount', this.value)"></td>
+          <td>
+            <select onchange="updatePack(${index}, 'unit', this.value)">
+              <option value="unid" ${pack.unit === 'unid' ? 'selected' : ''}>unid/docena</option>
+              <option value="m" ${pack.unit === 'm' ? 'selected' : ''}>metros</option>
+            </select>
+          </td>
+          <td><input type="number" value="${pack.usedAmount}" style="width:80px" oninput="updatePack(${index}, 'usedAmount', this.value)"></td>
+          <td><strong id="cost-pack-${index}">$${cost.toFixed(2)}</strong></td>
+          <td><button class="btn btn-danger" onclick="removePackaging(${index})">X</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      calcularTotales();
+    }
+
+    function updateIng(index, field, value) {
+      ingredients[index][field] = (field === 'name' || field === 'buyUnit' || field === 'useUnit') 
+        ? value 
+        : parseFloat(value) || 0;
+      
+      let cost = calculateIngredientCost(ingredients[index]);
+      const costSpan = document.getElementById(`cost-ing-${index}`);
+      if (costSpan) costSpan.innerText = `$${cost.toFixed(2)}`;
+
+      calcularTotales();
+    }
+
+    function updatePack(index, field, value) {
+      packagings[index][field] = (field === 'name' || field === 'unit') 
+        ? value 
+        : parseFloat(value) || 0;
+
+      let cost = calculatePackagingCost(packagings[index]);
+      const costSpan = document.getElementById(`cost-pack-${index}`);
+      if (costSpan) costSpan.innerText = `$${cost.toFixed(2)}`;
+
+      calcularTotales();
+    }
+
+    function addIngredientRow() {
+      ingredients.push({ name: "", buyPrice: 0, buyAmount: 1, buyUnit: "kg", usedAmount: 0, useUnit: "g" });
+      renderIngredients();
+    }
+
+    function removeIngredient(index) {
+      ingredients.splice(index, 1);
+      renderIngredients();
+    }
+
+    function addPackagingRow() {
+      packagings.push({ name: "", buyPrice: 0, buyAmount: 1, unit: "unid", usedAmount: 1 });
+      renderPackagings();
+    }
+
+    function removePackaging(index) {
+      packagings.splice(index, 1);
+      renderPackagings();
+    }
+
+    function calcularTotales() {
+      const units = parseFloat(document.getElementById("unitsProduced").value) || 1;
+      const margin = parseFloat(document.getElementById("profitMargin").value) || 0;
+      const overheadPercent = parseFloat(document.getElementById("overheadPercent").value) || 0;
+      const laborHours = parseFloat(document.getElementById("laborHours").value) || 0;
+      const laborRate = parseFloat(document.getElementById("laborRate").value) || 0;
+
+      // Actualizar labels de cantidad
+      document.getElementById("countUnitsLabel").innerText = units;
+      document.getElementById("resUnitsLabel").innerText = units;
+      document.getElementById("resUnitsLabel2").innerText = units;
+
+      // 1. Costo Insumos Directos por 1 unidad
+      const unitIngredientsCost = ingredients.reduce((sum, ing) => sum + calculateIngredientCost(ing), 0);
+      
+      // Costo Insumos para el Lote completo (Multiplicado por las unidades indicadas)
+      const batchIngredientsCost = unitIngredientsCost * units;
+
+      // 2. Costo Empaques por 1 unidad y por Lote
+      const unitPackagingCost = packagings.reduce((sum, pack) => sum + calculatePackagingCost(pack), 0);
+      const batchPackagingCost = unitPackagingCost * units;
+
+      // 3. Gastos Indirectos (Servicios + Trabajo)
+      const overheadCost = batchIngredientsCost * (overheadPercent / 100);
+      const laborCost = laborHours * laborRate;
+      const totalIndirect = overheadCost + laborCost;
+
+      // 4. Totales de Producción
+      const totalBatchCost = batchIngredientsCost + batchPackagingCost + totalIndirect;
+      const unitCost = totalBatchCost / units;
+
+      // 5. Precios de Venta Sugeridos
+      const rawUnitPrice = unitCost * (1 + (margin / 100));
+      const roundedUnitPrice = redondearComercial(rawUnitPrice);
+      const roundedBatchPrice = roundedUnitPrice * units;
+      const batchProfit = roundedBatchPrice - totalBatchCost;
+
+      // Actualizar Subtotales en las Secciones
+      document.getElementById("badgeSubtotalIngredients").innerText = `$${unitIngredientsCost.toFixed(2)}`;
+      document.getElementById("tableSubtotalIngredients").innerText = `$${unitIngredientsCost.toFixed(2)}`;
+      document.getElementById("batchIngredientsTotal").innerText = `$${batchIngredientsCost.toFixed(2)}`;
+
+      document.getElementById("badgeSubtotalPackaging").innerText = `$${unitPackagingCost.toFixed(2)}`;
+      document.getElementById("tableSubtotalPackaging").innerText = `$${unitPackagingCost.toFixed(2)}`;
+
+      // Actualizar Resumen Final
+      document.getElementById("resIngredientsTotal").innerText = `$${redondearComercial(batchIngredientsCost)}`;
+      document.getElementById("resPackagingTotal").innerText = `$${redondearComercial(batchPackagingCost)}`;
+      document.getElementById("resOverheadTotal").innerText = `$${redondearComercial(totalIndirect)}`;
+      document.getElementById("resTotalBatch").innerText = `$${redondearComercial(totalBatchCost)}`;
+      document.getElementById("resUnitCost").innerText = `$${redondearComercial(unitCost)}`;
+      document.getElementById("resBatchPrice").innerText = `$${roundedBatchPrice}`;
+      document.getElementById("resUnitPrice").innerText = `$${roundedUnitPrice}`;
+      document.getElementById("resBatchProfit").innerText = `$${redondearComercial(batchProfit)}`;
+    }
+
+    // Guardar en localStorage
+    function saveRecipe() {
+      const name = document.getElementById("recipeName").value.trim();
+      if (!name) {
+        alert("Por favor ingresa un nombre para la receta.");
+        return;
+      }
+
+      const recipeData = {
+        name: name,
+        units: document.getElementById("unitsProduced").value,
+        margin: document.getElementById("profitMargin").value,
+        overheadPercent: document.getElementById("overheadPercent").value,
+        laborHours: document.getElementById("laborHours").value,
+        laborRate: document.getElementById("laborRate").value,
+        ingredients: ingredients,
+        packagings: packagings
+      };
+
+      let recipes = JSON.parse(localStorage.getItem("pastry_recipes") || "{}");
+      recipes[name] = recipeData;
+      localStorage.setItem("pastry_recipes", JSON.stringify(recipes));
+
+      alert(`¡Receta "${name}" guardada con éxito!`);
+      loadSavedRecipesList();
+    }
+
+    function loadRecipe(name) {
+      let recipes = JSON.parse(localStorage.getItem("pastry_recipes") || "{}");
+      const recipe = recipes[name];
+      if (!recipe) return;
+
+      document.getElementById("recipeName").value = recipe.name;
+      document.getElementById("unitsProduced").value = recipe.units || 1;
+      document.getElementById("profitMargin").value = recipe.margin;
+      document.getElementById("overheadPercent").value = recipe.overheadPercent || 10;
+      document.getElementById("laborHours").value = recipe.laborHours || 0;
+      document.getElementById("laborRate").value = recipe.laborRate || 0;
+
+      ingredients = recipe.ingredients || [];
+      packagings = recipe.packagings || [];
+
+      renderIngredients();
+      renderPackagings();
+    }
+
+    function deleteRecipe(name) {
+      if (confirm(`¿Seguro que deseas eliminar la receta "${name}"?`)) {
+        let recipes = JSON.parse(localStorage.getItem("pastry_recipes") || "{}");
+        delete recipes[name];
+        localStorage.setItem("pastry_recipes", JSON.stringify(recipes));
+        loadSavedRecipesList();
+      }
+    }
+
+    function loadSavedRecipesList() {
+      const container = document.getElementById("savedList");
+      let recipes = JSON.parse(localStorage.getItem("pastry_recipes") || "{}");
+      const keys = Object.keys(recipes);
+
+      if (keys.length === 0) {
+        container.innerHTML = `<p style="color:#888;">No hay recetas guardadas en el navegador.</p>`;
+        return;
+      }
+
+      container.innerHTML = "";
+      keys.forEach(key => {
+        const item = document.createElement("div");
+        item.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #ddd;";
+        item.innerHTML = `
+          <strong>${key}</strong>
+          <div>
+            <button class="btn" style="padding:4px 10px; font-size:0.85em;" onclick="loadRecipe('${key}')">Cargar</button>
+            <button class="btn btn-danger" style="font-size:0.85em;" onclick="deleteRecipe('${key}')">Eliminar</button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Inicializar
+    window.onload = () => {
+      renderIngredients();
+      renderPackagings();
+      loadSavedRecipesList();
+    };
+  </script>
+
+</body>
+</html>
