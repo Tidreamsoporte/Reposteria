@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Costos Pastelera</title>
+  <title>Calculadora de Costos y Cuadre Pastelero 🎂</title>
   <style>
     :root {
       --primary: #d81b60;
@@ -14,6 +14,9 @@
       --border-color: #f48fb1;
       --accent: #8e24aa;
       --accent-light: #f3e5f5;
+      --green-bg: #e8f5e9;
+      --green-border: #c8e6c9;
+      --green-text: #2e7d32;
     }
 
     * {
@@ -56,7 +59,7 @@
     }
 
     .section {
-      margin-bottom: 25px;
+      margin-bottom: 30px;
     }
 
     .section-title {
@@ -198,6 +201,14 @@
       margin-top: 20px;
     }
 
+    .cuadre-card {
+      background-color: var(--green-bg);
+      border: 1px solid var(--green-border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
     .results-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -231,6 +242,11 @@
       font-size: 1.5em;
     }
 
+    .result-box.green strong {
+      color: var(--green-text);
+      font-size: 1.5em;
+    }
+
     .actions {
       display: flex;
       gap: 10px;
@@ -255,8 +271,8 @@
 
   <div class="container">
     <header>
-      <h1>Calculadora de Costos Pastelera 🎂</h1>
-      <p>Calcula el costo exacto de tus productos y establece tu precio de venta ideal</p>
+      <h1>Calculadora de Costos y Cuadre Pastelero 🎂</h1>
+      <p>Gestión de costos de producción y arqueo de ventas para reposteros</p>
     </header>
 
     <!-- 1. Datos generales de la receta -->
@@ -309,15 +325,15 @@
       <button class="btn btn-add" onclick="addIngredientRow()">+ Agregar Ingrediente</button>
     </div>
 
-    <!-- 3. Rendimiento / Cantidad a Producir (AQUÍ UBICADO) -->
+    <!-- 3. Rendimiento / Cantidad a Producir -->
     <div class="section">
       <div class="form-grid">
         <div class="input-group highlight-group">
-          <label for="unitsProduced">📦 ¿Cuántas unidades vas a preparar en esta tanda/lote?</label>
+          <label for="unitsProduced">📦 Unidades preparadas en esta tanda/lote</label>
           <input type="number" id="unitsProduced" value="4" min="1" oninput="calcularTotales()" style="font-weight: bold; font-size: 1.1em; color: #d81b60;">
         </div>
         <div class="input-group highlight-group" style="background-color: #e8f5e9; border-color: #c8e6c9;">
-          <label style="color: #2e7d32;">💰 Costo Total de Insumos para la Tanda (<span id="countUnitsLabel">4</span> unidades):</label>
+          <label style="color: #2e7d32;">💰 Costo Total de Insumos para el Lote (<span id="countUnitsLabel">4</span> unidades):</label>
           <span id="batchIngredientsTotal" style="font-size: 1.3em; font-weight: bold; color: #2e7d32; margin-top: 5px;">$0</span>
         </div>
       </div>
@@ -367,18 +383,18 @@
         </div>
         <div class="input-group">
           <label for="laborHours">Horas de Trabajo para la Tanda</label>
-          <input type="number" id="laborHours" value="0.5" step="0.1" min="0" oninput="calcularTotales()">
+          <input type="number" id="laborHours" value="0" step="0.1" min="0" oninput="calcularTotales()">
         </div>
         <div class="input-group">
           <label for="laborRate">Valor por Hora ($)</label>
-          <input type="number" id="laborRate" value="3000" min="0" oninput="calcularTotales()">
+          <input type="number" id="laborRate" value="0" min="0" oninput="calcularTotales()">
         </div>
       </div>
     </div>
 
-    <!-- 6. Resultados General -->
+    <!-- 6. Resultados de la Receta -->
     <div class="results-card">
-      <h2 class="section-title" style="border:none; text-align:center;">📊 Resumen General de Costos y Precio Final</h2>
+      <h2 class="section-title" style="border:none; text-align:center;">📊 Resumen General de Costos por Producto</h2>
       <div class="results-grid">
         <div class="result-box">
           <span>Insumos Lote (<span id="resUnitsLabel">4</span> u)</span>
@@ -415,10 +431,60 @@
       </div>
     </div>
 
-    <!-- Botones de Acción -->
     <div class="actions">
       <button class="btn" onclick="saveRecipe()">💾 Guardar Receta Completa</button>
       <button class="btn btn-secondary" onclick="window.print()">🖨️ Imprimir / Exportar PDF</button>
+    </div>
+
+    <!-- 7. MÓDULO DE ARQUEO Y CUADRE DE VENTAS REALES -->
+    <div class="section" style="margin-top: 40px; border-top: 3px solid var(--green-text); padding-top: 20px;">
+      <div class="section-title">
+        <span style="color: var(--green-text);">7. 💵 Arqueo y Cuadre de Ventas Realizadas</span>
+        <span class="subtotal-badge" style="background-color: var(--green-bg); color: var(--green-text);">Control de Caja</span>
+      </div>
+      <p style="font-size: 0.9em; color: #555; margin-bottom: 15px;">
+        Ingresa los productos que lograste vender para calcular cuánto dinero de tu caja es <b>Inversión a reponer</b> y cuánto es tu <b>Ganancia Real limpia</b>.
+      </p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Producto Vendido</th>
+              <th>Costo Unitario ($)</th>
+              <th>Precio Venta Unitario ($)</th>
+              <th>Cant. Vendida</th>
+              <th>Total Venta ($)</th>
+              <th>Inversión / Costos ($)</th>
+              <th>Ganancia Neta ($)</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="salesList">
+            <!-- Filas de ventas -->
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-add" style="background-color: #2e7d32;" onclick="addSaleRow()">+ Agregar Producto a la Venta</button>
+
+      <!-- Resultados del Cuadre -->
+      <div class="cuadre-card">
+        <h2 class="section-title" style="border:none; text-align:center; color: var(--green-text);">📈 Resumen del Cuadre de Caja</h2>
+        <div class="results-grid">
+          <div class="result-box">
+            <span>Total Ingreso en Caja</span>
+            <strong id="cuadreTotalVenta">$0</strong>
+          </div>
+          <div class="result-box">
+            <span>Inversión a Guardar / Reponer</span>
+            <strong id="cuadreTotalInversion" style="color: #d32f2f;">$0</strong>
+          </div>
+          <div class="result-box green">
+            <span>Ganancia Neta Libre</span>
+            <strong id="cuadreTotalGanancia">$0</strong>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Recetas Guardadas -->
@@ -442,6 +508,11 @@
     let packagings = [
       { name: "Bolsa Individual", buyPrice: 2400, buyAmount: 100, unit: "unid", usedAmount: 1 },
       { name: "Sticker / Etiqueta", buyPrice: 1000, buyAmount: 100, unit: "unid", usedAmount: 1 }
+    ];
+
+    // Arreglo de Ventas Realizadas para el Cuadre
+    let sales = [
+      { name: "Alfajor Artesanal", unitCost: 300, unitPrice: 600, qtySold: 10 }
     ];
 
     function redondearComercial(valor) {
@@ -476,7 +547,7 @@
           <td><input type="number" value="${ing.buyPrice}" style="width:90px" oninput="updateIng(${index}, 'buyPrice', this.value)"></td>
           <td><input type="number" value="${ing.buyAmount}" style="width:80px" oninput="updateIng(${index}, 'buyAmount', this.value)"></td>
           <td>
-            <select onchange="updateIng(${index}, 'buyUnit', this.value)">
+            <select onchange="updateIngSelect(${index}, 'buyUnit', this.value)">
               <option value="kg" ${ing.buyUnit === 'kg' ? 'selected' : ''}>kg</option>
               <option value="g" ${ing.buyUnit === 'g' ? 'selected' : ''}>g</option>
               <option value="l" ${ing.buyUnit === 'l' ? 'selected' : ''}>l</option>
@@ -486,7 +557,7 @@
           </td>
           <td><input type="number" value="${ing.usedAmount}" style="width:80px" oninput="updateIng(${index}, 'usedAmount', this.value)"></td>
           <td>
-            <select onchange="updateIng(${index}, 'useUnit', this.value)">
+            <select onchange="updateIngSelect(${index}, 'useUnit', this.value)">
               <option value="g" ${ing.useUnit === 'g' ? 'selected' : ''}>g</option>
               <option value="kg" ${ing.useUnit === 'kg' ? 'selected' : ''}>kg</option>
               <option value="ml" ${ing.useUnit === 'ml' ? 'selected' : ''}>ml</option>
@@ -515,7 +586,7 @@
           <td><input type="number" value="${pack.buyPrice}" style="width:90px" oninput="updatePack(${index}, 'buyPrice', this.value)"></td>
           <td><input type="number" value="${pack.buyAmount}" style="width:80px" oninput="updatePack(${index}, 'buyAmount', this.value)"></td>
           <td>
-            <select onchange="updatePack(${index}, 'unit', this.value)">
+            <select onchange="updatePackSelect(${index}, 'unit', this.value)">
               <option value="unid" ${pack.unit === 'unid' ? 'selected' : ''}>unid/docena</option>
               <option value="m" ${pack.unit === 'm' ? 'selected' : ''}>metros</option>
             </select>
@@ -530,28 +601,76 @@
       calcularTotales();
     }
 
+    function renderSales() {
+      const tbody = document.getElementById("salesList");
+      tbody.innerHTML = "";
+
+      sales.forEach((s, index) => {
+        let totalVenta = s.unitPrice * s.qtySold;
+        let totalInversion = s.unitCost * s.qtySold;
+        let ganancia = totalVenta - totalInversion;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><input type="text" value="${s.name}" oninput="updateSale(${index}, 'name', this.value)"></td>
+          <td><input type="number" value="${s.unitCost}" style="width:90px" oninput="updateSale(${index}, 'unitCost', this.value)"></td>
+          <td><input type="number" value="${s.unitPrice}" style="width:90px" oninput="updateSale(${index}, 'unitPrice', this.value)"></td>
+          <td><input type="number" value="${s.qtySold}" style="width:80px" oninput="updateSale(${index}, 'qtySold', this.value)"></td>
+          <td><strong id="sale-total-${index}">$${redondearComercial(totalVenta)}</strong></td>
+          <td><strong id="sale-inv-${index}" style="color:#d32f2f;">$${redondearComercial(totalInversion)}</strong></td>
+          <td><strong id="sale-prof-${index}" style="color:#2e7d32;">$${redondearComercial(ganancia)}</strong></td>
+          <td><button class="btn btn-danger" onclick="removeSale(${index})">X</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      calcularCuadre();
+    }
+
+    // Funciones optimizadas para escritura fluida sin perder el foco
     function updateIng(index, field, value) {
-      ingredients[index][field] = (field === 'name' || field === 'buyUnit' || field === 'useUnit') 
-        ? value 
-        : parseFloat(value) || 0;
-      
+      ingredients[index][field] = field === 'name' ? value : parseFloat(value) || 0;
       let cost = calculateIngredientCost(ingredients[index]);
       const costSpan = document.getElementById(`cost-ing-${index}`);
       if (costSpan) costSpan.innerText = `$${cost.toFixed(2)}`;
-
       calcularTotales();
     }
 
-    function updatePack(index, field, value) {
-      packagings[index][field] = (field === 'name' || field === 'unit') 
-        ? value 
-        : parseFloat(value) || 0;
+    function updateIngSelect(index, field, value) {
+      ingredients[index][field] = value;
+      renderIngredients();
+    }
 
+    function updatePack(index, field, value) {
+      packagings[index][field] = field === 'name' ? value : parseFloat(value) || 0;
       let cost = calculatePackagingCost(packagings[index]);
       const costSpan = document.getElementById(`cost-pack-${index}`);
       if (costSpan) costSpan.innerText = `$${cost.toFixed(2)}`;
-
       calcularTotales();
+    }
+
+    function updatePackSelect(index, field, value) {
+      packagings[index][field] = value;
+      renderPackagings();
+    }
+
+    function updateSale(index, field, value) {
+      sales[index][field] = field === 'name' ? value : parseFloat(value) || 0;
+      
+      let s = sales[index];
+      let totalVenta = s.unitPrice * s.qtySold;
+      let totalInversion = s.unitCost * s.qtySold;
+      let ganancia = totalVenta - totalInversion;
+
+      const tEl = document.getElementById(`sale-total-${index}`);
+      const iEl = document.getElementById(`sale-inv-${index}`);
+      const pEl = document.getElementById(`sale-prof-${index}`);
+
+      if(tEl) tEl.innerText = `$${redondearComercial(totalVenta)}`;
+      if(iEl) iEl.innerText = `$${redondearComercial(totalInversion)}`;
+      if(pEl) pEl.innerText = `$${redondearComercial(ganancia)}`;
+
+      calcularCuadre();
     }
 
     function addIngredientRow() {
@@ -574,6 +693,25 @@
       renderPackagings();
     }
 
+    function addSaleRow() {
+      const currentName = document.getElementById("recipeName").value || "Producto";
+      const currentUnitCostText = document.getElementById("resUnitCost").innerText.replace("$", "");
+      const currentUnitPriceText = document.getElementById("resUnitPrice").innerText.replace("$", "");
+
+      sales.push({ 
+        name: currentName, 
+        unitCost: parseFloat(currentUnitCostText) || 0, 
+        unitPrice: parseFloat(currentUnitPriceText) || 0, 
+        qtySold: 1 
+      });
+      renderSales();
+    }
+
+    function removeSale(index) {
+      sales.splice(index, 1);
+      renderSales();
+    }
+
     function calcularTotales() {
       const units = parseFloat(document.getElementById("unitsProduced").value) || 1;
       const margin = parseFloat(document.getElementById("profitMargin").value) || 0;
@@ -581,37 +719,28 @@
       const laborHours = parseFloat(document.getElementById("laborHours").value) || 0;
       const laborRate = parseFloat(document.getElementById("laborRate").value) || 0;
 
-      // Actualizar labels de cantidad
       document.getElementById("countUnitsLabel").innerText = units;
       document.getElementById("resUnitsLabel").innerText = units;
       document.getElementById("resUnitsLabel2").innerText = units;
 
-      // 1. Costo Insumos Directos por 1 unidad
       const unitIngredientsCost = ingredients.reduce((sum, ing) => sum + calculateIngredientCost(ing), 0);
-      
-      // Costo Insumos para el Lote completo (Multiplicado por las unidades indicadas)
       const batchIngredientsCost = unitIngredientsCost * units;
 
-      // 2. Costo Empaques por 1 unidad y por Lote
       const unitPackagingCost = packagings.reduce((sum, pack) => sum + calculatePackagingCost(pack), 0);
       const batchPackagingCost = unitPackagingCost * units;
 
-      // 3. Gastos Indirectos (Servicios + Trabajo)
       const overheadCost = batchIngredientsCost * (overheadPercent / 100);
       const laborCost = laborHours * laborRate;
       const totalIndirect = overheadCost + laborCost;
 
-      // 4. Totales de Producción
       const totalBatchCost = batchIngredientsCost + batchPackagingCost + totalIndirect;
       const unitCost = totalBatchCost / units;
 
-      // 5. Precios de Venta Sugeridos
       const rawUnitPrice = unitCost * (1 + (margin / 100));
       const roundedUnitPrice = redondearComercial(rawUnitPrice);
       const roundedBatchPrice = roundedUnitPrice * units;
       const batchProfit = roundedBatchPrice - totalBatchCost;
 
-      // Actualizar Subtotales en las Secciones
       document.getElementById("badgeSubtotalIngredients").innerText = `$${unitIngredientsCost.toFixed(2)}`;
       document.getElementById("tableSubtotalIngredients").innerText = `$${unitIngredientsCost.toFixed(2)}`;
       document.getElementById("batchIngredientsTotal").innerText = `$${batchIngredientsCost.toFixed(2)}`;
@@ -619,7 +748,6 @@
       document.getElementById("badgeSubtotalPackaging").innerText = `$${unitPackagingCost.toFixed(2)}`;
       document.getElementById("tableSubtotalPackaging").innerText = `$${unitPackagingCost.toFixed(2)}`;
 
-      // Actualizar Resumen Final
       document.getElementById("resIngredientsTotal").innerText = `$${redondearComercial(batchIngredientsCost)}`;
       document.getElementById("resPackagingTotal").innerText = `$${redondearComercial(batchPackagingCost)}`;
       document.getElementById("resOverheadTotal").innerText = `$${redondearComercial(totalIndirect)}`;
@@ -630,7 +758,22 @@
       document.getElementById("resBatchProfit").innerText = `$${redondearComercial(batchProfit)}`;
     }
 
-    // Guardar en localStorage
+    function calcularCuadre() {
+      let totalVenta = 0;
+      let totalInversion = 0;
+
+      sales.forEach(s => {
+        totalVenta += (s.unitPrice * s.qtySold);
+        totalInversion += (s.unitCost * s.qtySold);
+      });
+
+      let totalGanancia = totalVenta - totalInversion;
+
+      document.getElementById("cuadreTotalVenta").innerText = `$${redondearComercial(totalVenta)}`;
+      document.getElementById("cuadreTotalInversion").innerText = `$${redondearComercial(totalInversion)}`;
+      document.getElementById("cuadreTotalGanancia").innerText = `$${redondearComercial(totalGanancia)}`;
+    }
+
     function saveRecipe() {
       const name = document.getElementById("recipeName").value.trim();
       if (!name) {
@@ -710,10 +853,10 @@
       });
     }
 
-    // Inicializar
     window.onload = () => {
       renderIngredients();
       renderPackagings();
+      renderSales();
       loadSavedRecipesList();
     };
   </script>
