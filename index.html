@@ -1,865 +1,523 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Costos y Cuadre Pastelero 🎂</title>
-  <style>
-    :root {
-      --primary: #d81b60;
-      --primary-hover: #c2185b;
-      --bg-color: #fce4ec;
-      --card-bg: #ffffff;
-      --text-color: #333333;
-      --border-color: #f48fb1;
-      --accent: #8e24aa;
-      --accent-light: #f3e5f5;
-      --green-bg: #e8f5e9;
-      --green-border: #c8e6c9;
-      --green-text: #2e7d32;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      padding: 25px;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 25px;
-      border-bottom: 2px solid var(--border-color);
-      padding-bottom: 15px;
-    }
-
-    header h1 {
-      color: var(--primary);
-      font-size: 2em;
-    }
-
-    header p {
-      color: #666;
-      font-size: 0.95em;
-    }
-
-    .section {
-      margin-bottom: 30px;
-    }
-
-    .section-title {
-      font-size: 1.2em;
-      color: var(--primary);
-      margin-bottom: 12px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 15px;
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .input-group label {
-      font-size: 0.85em;
-      font-weight: bold;
-      margin-bottom: 5px;
-      color: #555;
-    }
-
-    .highlight-group {
-      background-color: #fff3e0;
-      border: 1px solid #ffe0b2;
-      padding: 12px;
-      border-radius: 8px;
-    }
-
-    .highlight-group label {
-      color: #e65100;
-    }
-
-    input, select, button {
-      padding: 8px 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 0.95em;
-    }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-
-    .table-container {
-      overflow-x: auto;
-      margin-top: 10px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th, td {
-      padding: 8px;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-      vertical-align: middle;
-    }
-
-    th {
-      background-color: #fff0f5;
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 0.85em;
-    }
-
-    tfoot td {
-      background-color: #f9f9f9;
-      font-weight: bold;
-      border-top: 2px solid var(--border-color);
-    }
-
-    .btn {
-      cursor: pointer;
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      font-weight: bold;
-      transition: background-color 0.2s;
-    }
-
-    .btn:hover {
-      background-color: var(--primary-hover);
-    }
-
-    .btn-secondary {
-      background-color: #757575;
-    }
-
-    .btn-secondary:hover {
-      background-color: #616161;
-    }
-
-    .btn-danger {
-      background-color: #e53935;
-      padding: 6px 10px;
-    }
-
-    .btn-danger:hover {
-      background-color: #c62828;
-    }
-
-    .btn-add {
-      margin-top: 10px;
-      background-color: #4caf50;
-    }
-
-    .btn-add:hover {
-      background-color: #388e3c;
-    }
-
-    .subtotal-badge {
-      background-color: var(--accent-light);
-      color: var(--accent);
-      padding: 4px 12px;
-      border-radius: 15px;
-      font-size: 0.9em;
-      font-weight: bold;
-    }
-
-    .results-card {
-      background-color: var(--accent-light);
-      border: 1px solid #e1bee7;
-      border-radius: 8px;
-      padding: 20px;
-      margin-top: 20px;
-    }
-
-    .cuadre-card {
-      background-color: var(--green-bg);
-      border: 1px solid var(--green-border);
-      border-radius: 8px;
-      padding: 20px;
-      margin-top: 20px;
-    }
-
-    .results-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 15px;
-      margin-top: 15px;
-    }
-
-    .result-box {
-      background: white;
-      padding: 15px;
-      border-radius: 6px;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-
-    .result-box span {
-      display: block;
-      font-size: 0.85em;
-      color: #666;
-    }
-
-    .result-box strong {
-      display: block;
-      font-size: 1.3em;
-      color: var(--accent);
-      margin-top: 5px;
-    }
-
-    .result-box.highlight strong {
-      color: var(--primary);
-      font-size: 1.5em;
-    }
-
-    .result-box.green strong {
-      color: var(--green-text);
-      font-size: 1.5em;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-
-    .saved-recipes {
-      margin-top: 30px;
-      border-top: 2px dashed #ddd;
-      padding-top: 20px;
-    }
-
-    @media print {
-      body { background-color: white; }
-      .container { box-shadow: none; max-width: 100%; }
-      .btn, .actions, .saved-recipes, .btn-danger { display: none !important; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora de costos y cuadre pastelero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2a1720; --muted:#7b6670; --bg:#fbf3f6; --card:#fff; --line:#efdfe6;
+  --berry:#b3245a; --berry-d:#8f1a47; --plum:#5b2a6e; --caramel:#d08a2e; --blue:#2f7ea6;
+  --mint:#1d7a58; --mint-bg:#e4f4ec; --danger:#c0392b; --r:14px;
+  --serif:'Fraunces',Georgia,serif; --sans:'Figtree','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.45;padding:clamp(12px,3vw,32px)}
+.wrap{max-width:1180px;margin:0 auto}
+h1,h2,h3,.big{font-family:var(--serif)}
+.brand{text-align:center;margin-bottom:24px}
+.logo{display:block;margin:0 auto 12px;height:clamp(64px,10vw,96px);width:auto;max-width:70%;object-fit:contain}
+.brand h1{font-size:clamp(1.5rem,4vw,2.3rem);color:var(--berry-d)}
+.brand p{color:var(--muted);max-width:620px;margin:6px auto 0}
+.site-foot{text-align:center;color:var(--muted);font-size:.9rem;padding:8px 0 4px}
+.site-foot b{color:var(--berry-d)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:22px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:18px}
+.card-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.card-head h2{font-size:1.15rem;flex:1}
+.step{width:26px;height:26px;border-radius:50%;background:var(--berry);color:#fff;font:700 .85rem var(--sans);display:grid;place-items:center}
+.badge{background:#f6e8f0;color:var(--plum);font-weight:700;font-size:.85rem;padding:4px 12px;border-radius:99px}
+.hint{color:var(--muted);font-size:.9rem;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;align-items:end}
+.fld{display:flex;flex-direction:column;justify-content:flex-end;gap:4px;font-size:.82rem;font-weight:600;color:var(--muted)}
+.wide{grid-column:1/-1}
+input,select,button{font:inherit}
+input[type=text],input[type=number],select{width:100%;padding:9px 10px;border:1px solid #dccbd3;border-radius:9px;background:#fff;color:var(--ink);font-weight:400}
+input:focus-visible,select:focus-visible,button:focus-visible,.switch input:focus-visible+span{outline:3px solid #e9a9c4;outline-offset:1px}
+.item{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;background:#fffafc}
+.item .grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+.item-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:.92rem;gap:8px}
+.item-foot b{color:var(--berry-d);font-size:1.02rem}
+.btn{cursor:pointer;border:0;border-radius:10px;padding:10px 16px;font-weight:700;background:var(--berry);color:#fff;transition:background .15s}
+.btn:hover{background:var(--berry-d)}
+.btn.soft{background:#f6e8f0;color:var(--berry-d)}.btn.soft:hover{background:#efd6e5}
+.btn.dark{background:var(--ink)}
+.btn.ghost{background:none;color:var(--danger);padding:6px 10px}.btn.ghost:hover{background:#fdecea}
+.extras{display:grid;gap:12px}
+.extra{border:1px solid var(--line);border-radius:12px;padding:14px}
+.extra.off .grid{opacity:.45;pointer-events:none}
+.extra .grid{margin-top:12px}
+.switch{display:flex;align-items:center;gap:12px;cursor:pointer;font-weight:700}
+.switch small{display:block;color:var(--muted);font-weight:400}
+.switch input{position:absolute;opacity:0}
+.switch span{flex:none;width:44px;height:26px;border-radius:99px;background:#d9cbd1;position:relative;transition:background .2s}
+.switch span::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
+.switch input:checked+span{background:var(--mint)}
+.switch input:checked+span::after{transform:translateX(18px)}
+.info{background:#eef5fb;border:1px solid #cfe2f1;color:#1d4f73;border-radius:12px;padding:12px 14px;font-size:.92rem}
+/* Dashboard */
+.dash{position:sticky;top:16px}
+.dash .card{margin:0;border:0;background:var(--ink);color:#fff;padding:22px}
+.dash small,.dash .lbl{color:#cdb8c2;font-size:.85rem}
+.price{display:flex;flex-direction:column;gap:2px;padding-bottom:16px;border-bottom:1px solid #4a3340}
+.big{font-size:clamp(2.4rem,6vw,3.2rem);line-height:1.05}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.tile{background:#3a2430;border-radius:12px;padding:12px}
+.tile b{display:block;font-size:1.25rem;font-family:var(--serif);margin-top:2px}
+.tile.key{background:#5a2a45;outline:2px solid #e07aa6}
+.bar{display:flex;height:12px;border-radius:99px;overflow:hidden;background:#4a3340;margin-bottom:12px}
+.bar i{display:block;height:100%;transition:width .3s}
+.rows{display:grid;gap:7px;font-size:.92rem}
+.rows div{display:flex;align-items:center;gap:8px}
+.rows .dot{width:10px;height:10px;border-radius:50%;flex:none}
+.rows span:nth-child(2){flex:1}.rows .na{opacity:.45}
+.lote{margin-top:16px;padding-top:14px;border-top:1px solid #4a3340}
+.lote h3{font-size:1rem;margin-bottom:8px}
+.lote .rows b{font-weight:700}
+.profit{color:#7fe0b4}
+.dash-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.dash-actions .btn{flex:1;min-width:120px}
+.dash-actions .soft{background:#3a2430;color:#fff}
+/* Cuadre */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:14px}
+.stat{background:#f8eff3;border-radius:12px;padding:14px}
+.stat b{display:block;font:700 1.5rem var(--serif);margin-top:2px}
+.stat.green{background:var(--mint-bg);color:var(--mint)}
+.saved{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.empty{color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:99px;opacity:0;pointer-events:none;transition:.25s;z-index:9}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:920px){.layout{grid-template-columns:1fr}.dash{position:static;order:-1}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+#report{display:none}
+@media print{
+  @page{margin:15mm}
+  body{background:#fff;padding:0;color:#222}
+  .wrap,.toast{display:none!important}
+  #report{display:block;font:10pt/1.45 'Figtree','Segoe UI',sans-serif}
+  #report .logo{display:block;margin:0 auto 8px;height:20mm;width:auto;max-width:60mm;object-fit:contain}
+  #report h1,#report .meta{text-align:center}
+  #report h1{font:700 22pt 'Fraunces',Georgia,serif;color:#8f1a47}
+  #report .meta{color:#6b5a62;margin:2px 0 14px;padding-bottom:10px;border-bottom:3px solid #b3245a}
+  #report h2{font:700 12.5pt 'Fraunces',Georgia,serif;color:#5b2a6e;margin:18px 0 6px;break-after:avoid}
+  #report table{width:100%;border-collapse:collapse;margin-bottom:4px}
+  #report tr{break-inside:avoid}
+  #report th{background:#f6e8f0;color:#5b2a6e;text-align:left;font-size:8.5pt;padding:6px 8px;border-bottom:1.5px solid #b3245a}
+  #report td{padding:6px 8px;border-bottom:1px solid #e6d9df}
+  #report .n{text-align:right;white-space:nowrap}
+  #report tfoot td{font-weight:700;background:#faf3f6;border-top:1.5px solid #b3245a;border-bottom:0}
+  #report .strong td{font-weight:700;background:#faf3f6}
+  #report .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;break-inside:avoid}
+  #report .keys div{border:1.5px solid #b3245a;border-radius:8px;padding:10px 12px}
+  #report .keys small{display:block;color:#6b5a62}
+  #report .keys b{font:700 15pt 'Fraunces',Georgia,serif;color:#8f1a47}
+  #report .keys .ok b{color:#1d7a58}
+  #report .foot{margin-top:18px;color:#8a7a82;font-size:8pt;text-align:center}
+}
+</style>
 </head>
 <body>
+<div class="wrap">
+  <header class="brand">
+    <img class="logo" src="logo.png" alt="Logo" onerror="this.remove()">
+    <h1>Calculadora de costos y cuadre pastelero</h1>
+    <p>Calcula cuánto cuesta tu producto con su envase y a qué precio venderlo. Después, cuadra la caja del día.</p>
+  </header>
 
-  <div class="container">
-    <header>
-      <h1>Calculadora de Costos y Cuadre Pastelero 🎂</h1>
-      <p>Gestión de costos de producción y arqueo de ventas para reposteros</p>
-    </header>
+  <div class="layout">
+    <div>
+      <!-- 1 -->
+      <section class="card">
+        <div class="card-head"><span class="step">1</span><h2>Tu producto</h2></div>
+        <div class="grid">
+          <label class="fld wide">Nombre del producto
+            <input type="text" id="name" class="cfg" value="Cuchuflí artesanal"></label>
+          <label class="fld">Formato de venta
+            <select id="format" class="cfg">
+              <option value="unit">Unidad individual</option>
+              <option value="pack" selected>Pack / combo</option>
+            </select></label>
+          <label class="fld" id="perPackBox">Unidades por pack
+            <input type="number" id="perPack" class="cfg" value="3" min="1" inputmode="numeric"></label>
+          <label class="fld"><span>¿Cuántos <span class="fmt">packs</span> vas a preparar?</span>
+            <input type="number" id="batches" class="cfg" value="4" min="1" inputmode="numeric"></label>
+          <label class="fld">Margen de ganancia (%)
+            <input type="number" id="margin" class="cfg" value="50" min="0" inputmode="decimal"></label>
+        </div>
+      </section>
 
-    <!-- 1. Datos generales de la receta -->
-    <div class="section">
-      <h2 class="section-title">1. Información del Producto</h2>
-      <div class="form-grid">
-        <div class="input-group">
-          <label for="recipeName">Nombre del Producto / Receta</label>
-          <input type="text" id="recipeName" value="Alfajor Artesanal">
-        </div>
-        <div class="input-group">
-          <label for="profitMargin">Margen de Ganancia (%)</label>
-          <input type="number" id="profitMargin" value="50" min="0" oninput="calcularTotales()">
-        </div>
-      </div>
-    </div>
+      <!-- 2 -->
+      <section class="card">
+        <div class="card-head"><span class="step">2</span><h2>Ingredientes</h2>
+          <span class="badge">1 unidad: <span id="ingSub">$0</span></span></div>
+        <p class="hint">Anota lo que compraste y cuánto usas para 1 unidad. El costo se calcula solo.</p>
+        <div id="ingList"></div>
+        <button class="btn soft" data-add="ingredients">+ Agregar ingrediente</button>
+        <div class="info" id="yield" style="margin-top:14px"></div>
+      </section>
 
-    <!-- 2. Lista de Ingredientes (Receta Base para 1 Unidad) -->
-    <div class="section">
-      <div class="section-title">
-        <span>2. Ingredientes e Insumos Directos (Por Unidad)</span>
-        <span class="subtotal-badge">Subtotal Insumos (1 Unid): <span id="badgeSubtotalIngredients">$0</span></span>
-      </div>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Ingrediente</th>
-              <th>Precio Compra ($)</th>
-              <th>Cant. Comprada</th>
-              <th>Unidad Compra</th>
-              <th>Cant. Usada (1 Unid)</th>
-              <th>Unidad Uso</th>
-              <th>Costo ($)</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody id="ingredientsList">
-            <!-- Filas dinámicas -->
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="6" style="text-align: right;">Costo Insumos por 1 Unidad:</td>
-              <td><strong id="tableSubtotalIngredients">$0</strong></td>
-              <td></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      <button class="btn btn-add" onclick="addIngredientRow()">+ Agregar Ingrediente</button>
-    </div>
+      <!-- 3 -->
+      <section class="card">
+        <div class="card-head"><span class="step">3</span><h2>Envase</h2>
+          <span class="badge">Por <span class="fmt">pack</span>: <span id="pkgSub">$0</span></span></div>
+        <p class="hint">Se usa un juego de envases por cada <span class="fmt">pack</span>: bolsa, caja, cinta, sticker.</p>
+        <div id="pkgList"></div>
+        <button class="btn soft" data-add="packagings">+ Agregar envase</button>
+      </section>
 
-    <!-- 3. Rendimiento / Cantidad a Producir -->
-    <div class="section">
-      <div class="form-grid">
-        <div class="input-group highlight-group">
-          <label for="unitsProduced">📦 Unidades preparadas en esta tanda/lote</label>
-          <input type="number" id="unitsProduced" value="4" min="1" oninput="calcularTotales()" style="font-weight: bold; font-size: 1.1em; color: #d81b60;">
-        </div>
-        <div class="input-group highlight-group" style="background-color: #e8f5e9; border-color: #c8e6c9;">
-          <label style="color: #2e7d32;">💰 Costo Total de Insumos para el Lote (<span id="countUnitsLabel">4</span> unidades):</label>
-          <span id="batchIngredientsTotal" style="font-size: 1.3em; font-weight: bold; color: #2e7d32; margin-top: 5px;">$0</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. Módulo de Empaques y Presentación -->
-    <div class="section">
-      <div class="section-title">
-        <span>4. Empaques, Bolsas y Presentación (Por Unidad de Venta)</span>
-        <span class="subtotal-badge">Subtotal Empaques: <span id="badgeSubtotalPackaging">$0</span></span>
-      </div>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Empaque / Detalle</th>
-              <th>Precio Paquete ($)</th>
-              <th>Cant. Paquete</th>
-              <th>Unidad</th>
-              <th>Cant. Usada (Por Unid)</th>
-              <th>Costo ($)</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody id="packagingList">
-            <!-- Filas dinámicas de empaque -->
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="5" style="text-align: right;">Subtotal Empaques por Unidad:</td>
-              <td><strong id="tableSubtotalPackaging">$0</strong></td>
-              <td></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      <button class="btn btn-add" onclick="addPackagingRow()">+ Agregar Empaque / Detalle</button>
-    </div>
-
-    <!-- 5. Gastos Indirectos y Mano de Obra -->
-    <div class="section">
-      <h2 class="section-title">5. Gastos Indirectos y Mano de Obra</h2>
-      <div class="form-grid">
-        <div class="input-group">
-          <label for="overheadPercent">Servicios (% Gas/Luz/Agua s/Insumos)</label>
-          <input type="number" id="overheadPercent" value="10" min="0" oninput="calcularTotales()">
-        </div>
-        <div class="input-group">
-          <label for="laborHours">Horas de Trabajo para la Tanda</label>
-          <input type="number" id="laborHours" value="0" step="0.1" min="0" oninput="calcularTotales()">
-        </div>
-        <div class="input-group">
-          <label for="laborRate">Valor por Hora ($)</label>
-          <input type="number" id="laborRate" value="0" min="0" oninput="calcularTotales()">
-        </div>
-      </div>
-    </div>
-
-    <!-- 6. Resultados de la Receta -->
-    <div class="results-card">
-      <h2 class="section-title" style="border:none; text-align:center;">📊 Resumen General de Costos por Producto</h2>
-      <div class="results-grid">
-        <div class="result-box">
-          <span>Insumos Lote (<span id="resUnitsLabel">4</span> u)</span>
-          <strong id="resIngredientsTotal">$0</strong>
-        </div>
-        <div class="result-box">
-          <span>Empaques Lote</span>
-          <strong id="resPackagingTotal">$0</strong>
-        </div>
-        <div class="result-box">
-          <span>Servicios + Trabajo</span>
-          <strong id="resOverheadTotal">$0</strong>
-        </div>
-        <div class="result-box">
-          <span>Costo Total Lote</span>
-          <strong id="resTotalBatch">$0</strong>
-        </div>
-        <div class="result-box">
-          <span>Costo Por 1 Unidad</span>
-          <strong id="resUnitCost">$0</strong>
-        </div>
-        <div class="result-box highlight">
-          <span>Precio Venta (Lote <span id="resUnitsLabel2">4</span> u)</span>
-          <strong id="resBatchPrice">$0</strong>
-        </div>
-        <div class="result-box highlight">
-          <span>Precio Venta (Por Unidad)</span>
-          <strong id="resUnitPrice">$0</strong>
-        </div>
-        <div class="result-box">
-          <span>Ganancia Total Lote</span>
-          <strong id="resBatchProfit">$0</strong>
-        </div>
-      </div>
-    </div>
-
-    <div class="actions">
-      <button class="btn" onclick="saveRecipe()">💾 Guardar Receta Completa</button>
-      <button class="btn btn-secondary" onclick="window.print()">🖨️ Imprimir / Exportar PDF</button>
-    </div>
-
-    <!-- 7. MÓDULO DE ARQUEO Y CUADRE DE VENTAS REALES -->
-    <div class="section" style="margin-top: 40px; border-top: 3px solid var(--green-text); padding-top: 20px;">
-      <div class="section-title">
-        <span style="color: var(--green-text);">7. 💵 Arqueo y Cuadre de Ventas Realizadas</span>
-        <span class="subtotal-badge" style="background-color: var(--green-bg); color: var(--green-text);">Control de Caja</span>
-      </div>
-      <p style="font-size: 0.9em; color: #555; margin-bottom: 15px;">
-        Ingresa los productos que lograste vender para calcular cuánto dinero de tu caja es <b>Inversión a reponer</b> y cuánto es tu <b>Ganancia Real limpia</b>.
-      </p>
-
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Producto Vendido</th>
-              <th>Costo Unitario ($)</th>
-              <th>Precio Venta Unitario ($)</th>
-              <th>Cant. Vendida</th>
-              <th>Total Venta ($)</th>
-              <th>Inversión / Costos ($)</th>
-              <th>Ganancia Neta ($)</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody id="salesList">
-            <!-- Filas de ventas -->
-          </tbody>
-        </table>
-      </div>
-      <button class="btn btn-add" style="background-color: #2e7d32;" onclick="addSaleRow()">+ Agregar Producto a la Venta</button>
-
-      <!-- Resultados del Cuadre -->
-      <div class="cuadre-card">
-        <h2 class="section-title" style="border:none; text-align:center; color: var(--green-text);">📈 Resumen del Cuadre de Caja</h2>
-        <div class="results-grid">
-          <div class="result-box">
-            <span>Total Ingreso en Caja</span>
-            <strong id="cuadreTotalVenta">$0</strong>
+      <!-- 4 -->
+      <section class="card">
+        <div class="card-head"><span class="step">4</span><h2>Gastos extra (opcionales)</h2></div>
+        <div class="extras">
+          <div class="extra" id="ovBox">
+            <label class="switch"><input type="checkbox" id="useOv" class="cfg" checked><span></span>
+              <div>Gastos básicos<small>Gas, luz y agua, como % del costo de insumos</small></div></label>
+            <div class="grid"><label class="fld">Porcentaje (%)
+              <input type="number" id="ovPct" class="cfg" value="10" min="0" inputmode="decimal"></label></div>
           </div>
-          <div class="result-box">
-            <span>Inversión a Guardar / Reponer</span>
-            <strong id="cuadreTotalInversion" style="color: #d32f2f;">$0</strong>
-          </div>
-          <div class="result-box green">
-            <span>Ganancia Neta Libre</span>
-            <strong id="cuadreTotalGanancia">$0</strong>
+          <div class="extra off" id="labBox">
+            <label class="switch"><input type="checkbox" id="useLab" class="cfg"><span></span>
+              <div>Mano de obra<small>Tu tiempo de trabajo en esta preparación</small></div></label>
+            <div class="grid">
+              <label class="fld">Horas de trabajo
+                <input type="number" id="hours" class="cfg" value="0" step="0.1" min="0" inputmode="decimal"></label>
+              <label class="fld">Valor por hora ($)
+                <input type="number" id="rate" class="cfg" value="0" min="0" inputmode="decimal"></label>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
 
-    <!-- Recetas Guardadas -->
-    <div class="saved-recipes">
-      <h2 class="section-title">📂 Recetas Guardadas</h2>
-      <div id="savedList">
-        <p style="color:#888;">No hay recetas guardadas en el navegador.</p>
+    <!-- Dashboard -->
+    <aside class="dash" aria-live="polite">
+      <div class="card">
+        <div class="price">
+          <small>Precio de venta por <span class="fmt">pack</span></small>
+          <span class="big" id="price">$0</span>
+          <small id="priceNote"></small>
+        </div>
+        <div class="tiles">
+          <div class="tile key"><span class="lbl">Producto + envase</span><b id="withPkg">$0</b></div>
+          <div class="tile"><span class="lbl">Costo total</span><b id="total">$0</b></div>
+        </div>
+        <div class="bar" id="bar"></div>
+        <div class="rows" id="rows"></div>
+        <div class="lote">
+          <h3 id="loteTitle">Tanda</h3>
+          <div class="rows">
+            <div><span>Costo de la tanda</span><b id="lCost">$0</b></div>
+            <div><span>Venta de la tanda</span><b id="lSale">$0</b></div>
+            <div><span>Ganancia</span><b class="profit" id="lProfit">$0</b></div>
+          </div>
+        </div>
+        <div class="dash-actions no-print">
+          <button class="btn" id="save">Guardar receta</button>
+          <button class="btn soft" id="print">Imprimir</button>
+        </div>
       </div>
-    </div>
+    </aside>
   </div>
 
-  <script>
-    // Arreglo de Ingredientes por defecto (1 unidad de alfajor)
-    let ingredients = [
-      { name: "Vainas / Galletas", buyPrice: 14500, buyAmount: 1200, buyUnit: "unid", usedAmount: 1, useUnit: "unid" },
-      { name: "Dulce de Leche / Manjar", buyPrice: 3800, buyAmount: 1, buyUnit: "kg", usedAmount: 8.75, useUnit: "g" },
-      { name: "Cobertura Chocolate", buyPrice: 7590, buyAmount: 1, buyUnit: "kg", usedAmount: 11.75, useUnit: "g" }
-    ];
+  <!-- Cuadre -->
+  <section class="card" style="margin-top:22px">
+    <div class="card-head"><h2>Cuadre de caja</h2><span class="badge" style="background:var(--mint-bg);color:var(--mint)">Ventas reales</span></div>
+    <p class="hint">Anota lo que vendiste para saber cuánto guardar para reponer insumos y cuánto es ganancia libre.</p>
+    <div id="saleList"></div>
+    <button class="btn soft" data-add="sales">+ Agregar venta</button>
+    <div class="stats">
+      <div class="stat">Ingreso en caja<b id="cIn">$0</b></div>
+      <div class="stat">Guardar para reponer<b id="cInv" style="color:var(--danger)">$0</b></div>
+      <div class="stat green">Ganancia libre<b id="cGain">$0</b></div>
+    </div>
+  </section>
 
-    // Arreglo de Empaques
-    let packagings = [
-      { name: "Bolsa Individual", buyPrice: 2400, buyAmount: 100, unit: "unid", usedAmount: 1 },
-      { name: "Sticker / Etiqueta", buyPrice: 1000, buyAmount: 100, unit: "unid", usedAmount: 1 }
-    ];
+  <section class="card no-print">
+    <div class="card-head"><h2>Recetas guardadas</h2></div>
+    <div id="saved"></div>
+  </section>
+  <footer class="site-foot">Página realizada por <b>tidreams</b></footer>
+</div>
+<div id="report"></div>
+<div class="toast" id="toast" role="status"></div>
 
-    // Arreglo de Ventas Realizadas para el Cuadre
-    let sales = [
-      { name: "Alfajor Artesanal", unitCost: 300, unitPrice: 600, qtySold: 10 }
-    ];
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const CLP = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+const money = n => CLP.format(Math.round(n) || 0);
+const small = n => '$' + (n || 0).toLocaleString('es-CL', { maximumFractionDigits: 1 });
+const num = v => parseFloat(v) || 0;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const STORE = 'pastry_recipes';
+const FACTOR = { kg: ['g', 1000], g: ['g', 1], l: ['ml', 1000], ml: ['ml', 1], unid: ['unid', 1] };
+const ING_UNITS = { kg: 'kg', g: 'g', l: 'l', ml: 'ml', unid: 'unid' };
+const PKG_UNITS = { unid: 'unid / docena', m: 'metros' };
 
-    function redondearComercial(valor) {
-      return Math.round(valor);
-    }
+const state = {
+  ingredients: [
+    { name: 'Vainas / cuchuflí', buyPrice: 14500, buyAmount: 1200, buyUnit: 'unid', usedAmount: 1, useUnit: 'unid' },
+    { name: 'Dulce de leche / manjar', buyPrice: 3800, buyAmount: 1, buyUnit: 'kg', usedAmount: 10, useUnit: 'g' },
+    { name: 'Cobertura de chocolate', buyPrice: 7590, buyAmount: 1, buyUnit: 'kg', usedAmount: 12, useUnit: 'g' }
+  ],
+  packagings: [
+    { name: 'Bolsa de celofán', buyPrice: 2400, buyAmount: 100, unit: 'unid', usedAmount: 1 },
+    { name: 'Sticker / cinta', buyPrice: 1000, buyAmount: 100, unit: 'unid', usedAmount: 1 }
+  ],
+  sales: [{ name: 'Pack de 3 cuchuflís', unitCost: 350, unitPrice: 800, qty: 5 }]
+};
+let last = { cost: 0, price: 0 };
 
-    function calculateIngredientCost(ing) {
-      if (!ing.buyAmount || ing.buyAmount <= 0) return 0;
-      let buyBase = ing.buyAmount;
-      if (ing.buyUnit === 'kg' || ing.buyUnit === 'l') buyBase = ing.buyAmount * 1000;
+/* ---------- Cálculos ---------- */
+const toBase = (v, u) => v * FACTOR[u][1];
+const ingCost = g => g.buyAmount > 0 ? g.buyPrice / toBase(g.buyAmount, g.buyUnit) * toBase(g.usedAmount, g.useUnit) : 0;
+const pkgCost = p => p.buyAmount > 0 ? p.buyPrice / p.buyAmount * p.usedAmount : 0;
+const sum = (list, fn) => list.reduce((t, x) => t + fn(x), 0);
 
-      let useBase = ing.usedAmount;
-      if (ing.useUnit === 'kg' || ing.useUnit === 'l') useBase = ing.usedAmount * 1000;
+function readConfig() {
+  const isPack = $('format').value === 'pack';
+  return {
+    isPack,
+    perPack: isPack ? Math.max(1, parseInt($('perPack').value) || 1) : 1,
+    batches: num($('batches').value) || 1,
+    margin: num($('margin').value),
+    useOv: $('useOv').checked, ovPct: num($('ovPct').value),
+    useLab: $('useLab').checked, hours: num($('hours').value), rate: num($('rate').value)
+  };
+}
 
-      return (ing.buyPrice / buyBase) * useBase;
-    }
+function compute(c) {
+  const ing = sum(state.ingredients, ingCost) * c.perPack;       // insumos por pack
+  const pkg = sum(state.packagings, pkgCost);                     // envase por pack
+  const ov = c.useOv ? ing * c.ovPct / 100 : 0;                   // gastos básicos por pack
+  const lab = c.useLab ? c.hours * c.rate / c.batches : 0;        // mano de obra por pack
+  const cost = ing + pkg + ov + lab;
+  const price = Math.round(cost * (1 + c.margin / 100));
+  return { ing, pkg, ov, lab, cost, price, withPkg: ing + pkg };
+}
 
-    function calculatePackagingCost(pack) {
-      if (!pack.buyAmount || pack.buyAmount <= 0) return 0;
-      return (pack.buyPrice / pack.buyAmount) * pack.usedAmount;
-    }
+/* ---------- Dashboard ---------- */
+function paint() {
+  const c = readConfig(), r = compute(c);
+  last = { cost: r.cost, price: r.price };
 
-    function renderIngredients() {
-      const tbody = document.getElementById("ingredientsList");
-      tbody.innerHTML = "";
+  $('perPackBox').style.display = c.isPack ? '' : 'none';
+  const label = c.isPack ? `pack de ${c.perPack}` : 'unidad';
+  document.querySelectorAll('.fmt').forEach(el => el.textContent = c.isPack ? 'packs' : 'unidades');
+  document.querySelectorAll('.fmt').forEach(el => { if (!el.closest('label.fld')) el.textContent = c.isPack ? 'pack' : 'unidad'; });
+  $('ovBox').classList.toggle('off', !c.useOv);
+  $('labBox').classList.toggle('off', !c.useLab);
 
-      ingredients.forEach((ing, index) => {
-        let cost = calculateIngredientCost(ing);
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><input type="text" value="${ing.name}" oninput="updateIng(${index}, 'name', this.value)"></td>
-          <td><input type="number" value="${ing.buyPrice}" style="width:90px" oninput="updateIng(${index}, 'buyPrice', this.value)"></td>
-          <td><input type="number" value="${ing.buyAmount}" style="width:80px" oninput="updateIng(${index}, 'buyAmount', this.value)"></td>
-          <td>
-            <select onchange="updateIngSelect(${index}, 'buyUnit', this.value)">
-              <option value="kg" ${ing.buyUnit === 'kg' ? 'selected' : ''}>kg</option>
-              <option value="g" ${ing.buyUnit === 'g' ? 'selected' : ''}>g</option>
-              <option value="l" ${ing.buyUnit === 'l' ? 'selected' : ''}>l</option>
-              <option value="ml" ${ing.buyUnit === 'ml' ? 'selected' : ''}>ml</option>
-              <option value="unid" ${ing.buyUnit === 'unid' ? 'selected' : ''}>unid</option>
-            </select>
-          </td>
-          <td><input type="number" value="${ing.usedAmount}" style="width:80px" oninput="updateIng(${index}, 'usedAmount', this.value)"></td>
-          <td>
-            <select onchange="updateIngSelect(${index}, 'useUnit', this.value)">
-              <option value="g" ${ing.useUnit === 'g' ? 'selected' : ''}>g</option>
-              <option value="kg" ${ing.useUnit === 'kg' ? 'selected' : ''}>kg</option>
-              <option value="ml" ${ing.useUnit === 'ml' ? 'selected' : ''}>ml</option>
-              <option value="l" ${ing.useUnit === 'l' ? 'selected' : ''}>l</option>
-              <option value="unid" ${ing.useUnit === 'unid' ? 'selected' : ''}>unid</option>
-            </select>
-          </td>
-          <td><strong id="cost-ing-${index}">$${cost.toFixed(2)}</strong></td>
-          <td><button class="btn btn-danger" onclick="removeIngredient(${index})">X</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
+  $('ingSub').textContent = small(sum(state.ingredients, ingCost));
+  $('pkgSub').textContent = small(r.pkg);
+  $('price').textContent = money(r.price);
+  $('priceNote').textContent = `${label}, con ${c.margin}% de margen`;
+  $('withPkg').textContent = money(r.withPkg);
+  $('total').textContent = money(r.cost);
 
-      calcularTotales();
-    }
+  const parts = [
+    ['Insumos', r.ing, '#e0679a', true], ['Envase', r.pkg, '#a97bd0', true],
+    ['Gastos básicos', r.ov, '#e8a24a', c.useOv], ['Mano de obra', r.lab, '#4fa6d1', c.useLab]
+  ];
+  $('bar').innerHTML = parts.map(([, v, col]) => v > 0 ? `<i style="width:${v / r.cost * 100}%;background:${col}"></i>` : '').join('');
+  $('rows').innerHTML = parts.map(([n, v, col, on]) =>
+    `<div class="${on ? '' : 'na'}"><span class="dot" style="background:${col}"></span><span>${n}</span><b>${on ? money(v) : 'No incluido'}</b></div>`).join('');
 
-    function renderPackagings() {
-      const tbody = document.getElementById("packagingList");
-      tbody.innerHTML = "";
+  const total = r.cost * c.batches, sale = r.price * c.batches;
+  $('loteTitle').textContent = `Tanda de ${c.batches} ${c.isPack ? 'packs' : 'unidades'}`;
+  $('lCost').textContent = money(total);
+  $('lSale').textContent = money(sale);
+  $('lProfit').textContent = money(sale - total);
 
-      packagings.forEach((pack, index) => {
-        let cost = calculatePackagingCost(pack);
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><input type="text" value="${pack.name}" oninput="updatePack(${index}, 'name', this.value)"></td>
-          <td><input type="number" value="${pack.buyPrice}" style="width:90px" oninput="updatePack(${index}, 'buyPrice', this.value)"></td>
-          <td><input type="number" value="${pack.buyAmount}" style="width:80px" oninput="updatePack(${index}, 'buyAmount', this.value)"></td>
-          <td>
-            <select onchange="updatePackSelect(${index}, 'unit', this.value)">
-              <option value="unid" ${pack.unit === 'unid' ? 'selected' : ''}>unid/docena</option>
-              <option value="m" ${pack.unit === 'm' ? 'selected' : ''}>metros</option>
-            </select>
-          </td>
-          <td><input type="number" value="${pack.usedAmount}" style="width:80px" oninput="updatePack(${index}, 'usedAmount', this.value)"></td>
-          <td><strong id="cost-pack-${index}">$${cost.toFixed(2)}</strong></td>
-          <td><button class="btn btn-danger" onclick="removePackaging(${index})">X</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
+  paintYield(c);
+  paintCuadre();
+}
 
-      calcularTotales();
-    }
+function paintYield(c) {
+  const g = state.ingredients[0], box = $('yield');
+  const ok = g && g.buyAmount > 0 && g.usedAmount > 0 && FACTOR[g.buyUnit][0] === FACTOR[g.useUnit][0];
+  if (!ok) { box.textContent = 'Agrega un primer ingrediente con cantidades para ver cuánto te rinde tu compra.'; return; }
+  const units = Math.floor(toBase(g.buyAmount, g.buyUnit) / toBase(g.usedAmount, g.useUnit));
+  const packs = Math.floor(units / c.perPack);
+  box.innerHTML = `<b>Rendimiento:</b> con ${esc(g.buyAmount)} ${g.buyUnit} de “${esc(g.name)}” te alcanza para <b>${units} unidades</b>` +
+    (c.isPack ? `, o <b>${packs} packs</b> de ${c.perPack}.` : '.');
+}
 
-    function renderSales() {
-      const tbody = document.getElementById("salesList");
-      tbody.innerHTML = "";
+function paintCuadre() {
+  const venta = sum(state.sales, s => s.unitPrice * s.qty), inv = sum(state.sales, s => s.unitCost * s.qty);
+  $('cIn').textContent = money(venta);
+  $('cInv').textContent = money(inv);
+  $('cGain').textContent = money(venta - inv);
+}
 
-      sales.forEach((s, index) => {
-        let totalVenta = s.unitPrice * s.qtySold;
-        let totalInversion = s.unitCost * s.qtySold;
-        let ganancia = totalVenta - totalInversion;
+/* ---------- Listas editables ---------- */
+const opts = (map, sel) => Object.entries(map).map(([v, t]) => `<option value="${v}" ${v === sel ? 'selected' : ''}>${t}</option>`).join('');
+const input = (label, list, i, f, v, type = 'number', cls = '') =>
+  `<label class="fld ${cls}">${label}<input type="${type}" ${type === 'number' ? 'inputmode="decimal" min="0" step="any"' : ''} data-list="${list}" data-i="${i}" data-f="${f}" value="${esc(v)}"></label>`;
+const select = (label, list, i, f, map, v) =>
+  `<label class="fld">${label}<select data-list="${list}" data-i="${i}" data-f="${f}">${opts(map, v)}</select></label>`;
+const remove = (list, i) => `<button class="btn ghost" data-del="${list}" data-i="${i}">Quitar</button>`;
 
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><input type="text" value="${s.name}" oninput="updateSale(${index}, 'name', this.value)"></td>
-          <td><input type="number" value="${s.unitCost}" style="width:90px" oninput="updateSale(${index}, 'unitCost', this.value)"></td>
-          <td><input type="number" value="${s.unitPrice}" style="width:90px" oninput="updateSale(${index}, 'unitPrice', this.value)"></td>
-          <td><input type="number" value="${s.qtySold}" style="width:80px" oninput="updateSale(${index}, 'qtySold', this.value)"></td>
-          <td><strong id="sale-total-${index}">$${redondearComercial(totalVenta)}</strong></td>
-          <td><strong id="sale-inv-${index}" style="color:#d32f2f;">$${redondearComercial(totalInversion)}</strong></td>
-          <td><strong id="sale-prof-${index}" style="color:#2e7d32;">$${redondearComercial(ganancia)}</strong></td>
-          <td><button class="btn btn-danger" onclick="removeSale(${index})">X</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
+function renderIngredients() {
+  $('ingList').innerHTML = state.ingredients.map((g, i) => `<div class="item"><div class="grid">
+    ${input('Ingrediente', 'ingredients', i, 'name', g.name, 'text', 'wide')}
+    ${input('Precio de compra ($)', 'ingredients', i, 'buyPrice', g.buyPrice)}
+    ${input('Cantidad comprada', 'ingredients', i, 'buyAmount', g.buyAmount)}
+    ${select('Unidad de compra', 'ingredients', i, 'buyUnit', ING_UNITS, g.buyUnit)}
+    ${input('Cant. usada (1 unid.)', 'ingredients', i, 'usedAmount', g.usedAmount)}
+    ${select('Unidad de uso', 'ingredients', i, 'useUnit', ING_UNITS, g.useUnit)}
+  </div><div class="item-foot"><span>Costo por 1 unidad: <b id="ing-${i}">${small(ingCost(g))}</b></span>${remove('ingredients', i)}</div></div>`).join('');
+  paint();
+}
 
-      calcularCuadre();
-    }
+function renderPackagings() {
+  $('pkgList').innerHTML = state.packagings.map((p, i) => `<div class="item"><div class="grid">
+    ${input('Envase / detalle', 'packagings', i, 'name', p.name, 'text', 'wide')}
+    ${input('Precio del paquete ($)', 'packagings', i, 'buyPrice', p.buyPrice)}
+    ${input('Cantidad en el paquete', 'packagings', i, 'buyAmount', p.buyAmount)}
+    ${select('Unidad', 'packagings', i, 'unit', PKG_UNITS, p.unit)}
+    ${input('Cantidad usada por pack', 'packagings', i, 'usedAmount', p.usedAmount)}
+  </div><div class="item-foot"><span>Costo por pack: <b id="pkg-${i}">${small(pkgCost(p))}</b></span>${remove('packagings', i)}</div></div>`).join('');
+  paint();
+}
 
-    // Funciones optimizadas para escritura fluida sin perder el foco
-    function updateIng(index, field, value) {
-      ingredients[index][field] = field === 'name' ? value : parseFloat(value) || 0;
-      let cost = calculateIngredientCost(ingredients[index]);
-      const costSpan = document.getElementById(`cost-ing-${index}`);
-      if (costSpan) costSpan.innerText = `$${cost.toFixed(2)}`;
-      calcularTotales();
-    }
+function renderSales() {
+  $('saleList').innerHTML = state.sales.map((s, i) => `<div class="item"><div class="grid">
+    ${input('Producto vendido', 'sales', i, 'name', s.name, 'text', 'wide')}
+    ${input('Costo unitario ($)', 'sales', i, 'unitCost', s.unitCost)}
+    ${input('Precio de venta ($)', 'sales', i, 'unitPrice', s.unitPrice)}
+    ${input('Cantidad vendida', 'sales', i, 'qty', s.qty)}
+  </div><div class="item-foot"><span id="sale-${i}">${saleText(s)}</span>${remove('sales', i)}</div></div>`).join('');
+  paintCuadre();
+}
 
-    function updateIngSelect(index, field, value) {
-      ingredients[index][field] = value;
-      renderIngredients();
-    }
+const saleText = s => `Venta <b>${money(s.unitPrice * s.qty)}</b> · Ganancia <b style="color:var(--mint)">${money((s.unitPrice - s.unitCost) * s.qty)}</b>`;
 
-    function updatePack(index, field, value) {
-      packagings[index][field] = field === 'name' ? value : parseFloat(value) || 0;
-      let cost = calculatePackagingCost(packagings[index]);
-      const costSpan = document.getElementById(`cost-pack-${index}`);
-      if (costSpan) costSpan.innerText = `$${cost.toFixed(2)}`;
-      calcularTotales();
-    }
+/* ---------- Eventos ---------- */
+document.addEventListener('input', e => {
+  const t = e.target, { list, i, f } = t.dataset;
+  if (list) {
+    const row = state[list][i];
+    row[f] = t.type === 'text' ? t.value : (t.tagName === 'SELECT' ? t.value : num(t.value));
+    if (list === 'ingredients') $(`ing-${i}`).textContent = small(ingCost(row));
+    if (list === 'packagings') $(`pkg-${i}`).textContent = small(pkgCost(row));
+    if (list === 'sales') { $(`sale-${i}`).innerHTML = saleText(row); }
+    paint();
+  } else if (t.classList.contains('cfg')) paint();
+});
 
-    function updatePackSelect(index, field, value) {
-      packagings[index][field] = value;
-      renderPackagings();
-    }
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const { add, del, i, load, drop } = b.dataset;
+  if (add === 'ingredients') { state.ingredients.push({ name: '', buyPrice: 0, buyAmount: 1, buyUnit: 'kg', usedAmount: 0, useUnit: 'g' }); renderIngredients(); }
+  if (add === 'packagings') { state.packagings.push({ name: '', buyPrice: 0, buyAmount: 1, unit: 'unid', usedAmount: 1 }); renderPackagings(); }
+  if (add === 'sales') { state.sales.push({ name: $('name').value || 'Producto', unitCost: Math.round(last.cost), unitPrice: last.price, qty: 1 }); renderSales(); }
+  if (del) { state[del].splice(i, 1); ({ ingredients: renderIngredients, packagings: renderPackagings, sales: renderSales })[del](); }
+  if (load) loadRecipe(load);
+  if (drop) deleteRecipe(drop);
+});
 
-    function updateSale(index, field, value) {
-      sales[index][field] = field === 'name' ? value : parseFloat(value) || 0;
-      
-      let s = sales[index];
-      let totalVenta = s.unitPrice * s.qtySold;
-      let totalInversion = s.unitCost * s.qtySold;
-      let ganancia = totalVenta - totalInversion;
+$('save').onclick = saveRecipe;
+$('print').onclick = () => window.print();
+window.addEventListener('beforeprint', buildReport);
 
-      const tEl = document.getElementById(`sale-total-${index}`);
-      const iEl = document.getElementById(`sale-inv-${index}`);
-      const pEl = document.getElementById(`sale-prof-${index}`);
+/* ---------- Informe de impresión ---------- */
+function buildReport() {
+  const c = readConfig(), r = compute(c), B = c.batches;
+  const unit = c.isPack ? `pack de ${c.perPack}` : 'unidad', many = c.isPack ? 'packs' : 'unidades';
+  const tr = (cells, cls = '') => `<tr class="${cls}">${cells.map((x, k) => `<td${k ? ' class="n"' : ''}>${x}</td>`).join('')}</tr>`;
+  const table = (head, rows, foot = '') => `<table><thead><tr>${head.map((h, k) => `<th${k ? ' class="n"' : ''}>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody>${foot ? `<tfoot>${foot}</tfoot>` : ''}</table>`;
+  const total = (label, cols, value) => `<tr><td colspan="${cols}">${label}</td><td class="n">${value}</td></tr>`;
 
-      if(tEl) tEl.innerText = `$${redondearComercial(totalVenta)}`;
-      if(iEl) iEl.innerText = `$${redondearComercial(totalInversion)}`;
-      if(pEl) pEl.innerText = `$${redondearComercial(ganancia)}`;
+  const ingHead = ['Ingrediente', 'Compra', 'Uso por unidad', 'Costo por unidad'].concat(c.isPack ? [`Costo por ${unit}`] : []);
+  const ingRows = state.ingredients.map(g => tr([esc(g.name) || '-', `${money(g.buyPrice)} por ${esc(g.buyAmount)} ${g.buyUnit}`,
+    `${esc(g.usedAmount)} ${g.useUnit}`, small(ingCost(g))].concat(c.isPack ? [small(ingCost(g) * c.perPack)] : []))).join('');
 
-      calcularCuadre();
-    }
+  const pkgRows = state.packagings.map(p => tr([esc(p.name) || '-', `${money(p.buyPrice)} por ${esc(p.buyAmount)} ${PKG_UNITS[p.unit]}`,
+    esc(p.usedAmount), small(pkgCost(p))])).join('');
 
-    function addIngredientRow() {
-      ingredients.push({ name: "", buyPrice: 0, buyAmount: 1, buyUnit: "kg", usedAmount: 0, useUnit: "g" });
-      renderIngredients();
-    }
+  const extra = [];
+  if (c.useOv) extra.push(tr(['Gastos básicos (gas, luz, agua)', `${c.ovPct}% del costo de insumos`, money(r.ov)]));
+  if (c.useLab) extra.push(tr(['Mano de obra', `${c.hours} h x ${money(c.rate)} por hora`, money(r.lab)]));
 
-    function removeIngredient(index) {
-      ingredients.splice(index, 1);
-      renderIngredients();
-    }
+  const lines = [['Insumos', r.ing], ['Envase', r.pkg]];
+  if (c.useOv) lines.push(['Gastos básicos', r.ov]);
+  if (c.useLab) lines.push(['Mano de obra', r.lab]);
+  const sumRows = lines.map(([n, v]) => tr([n, money(v), money(v * B)])).join('') +
+    tr(['Costo total de producción', money(r.cost), money(r.cost * B)], 'strong') +
+    tr([`Precio de venta (margen ${c.margin}%)`, money(r.price), money(r.price * B)], 'strong');
 
-    function addPackagingRow() {
-      packagings.push({ name: "", buyPrice: 0, buyAmount: 1, unit: "unid", usedAmount: 1 });
-      renderPackagings();
-    }
+  $('report').innerHTML = `
+    <img class="logo" src="logo.png" alt="" onerror="this.remove()">
+    <h1>${esc($('name').value) || 'Producto'}</h1>
+    <p class="meta">Detalle de costos · ${c.isPack ? `Pack de ${c.perPack} unidades` : 'Venta por unidad'} · Tanda de ${B} ${many} · ${new Date().toLocaleDateString('es-CL', { dateStyle: 'long' })}</p>
+    <h2>Ingredientes</h2>
+    ${table(ingHead, ingRows, total(`Total insumos por ${unit}`, ingHead.length - 1, money(r.ing)))}
+    <h2>Envase</h2>
+    ${table(['Envase', 'Compra', `Cantidad por ${unit}`, `Costo por ${unit}`], pkgRows, total(`Total envase por ${unit}`, 3, money(r.pkg)))}
+    ${extra.length ? `<h2>Gastos extra</h2>${table(['Concepto', 'Cálculo', `Costo por ${unit}`], extra.join(''))}` : ''}
+    <h2>Resumen de la producción</h2>
+    ${table(['Concepto', `Por ${unit}`, `Tanda de ${B} ${many}`], sumRows)}
+    <div class="keys">
+      <div><small>Costo total de la tanda</small><b>${money(r.cost * B)}</b></div>
+      <div><small>Venta total estimada</small><b>${money(r.price * B)}</b></div>
+      <div class="ok"><small>Ganancia estimada</small><b>${money((r.price - r.cost) * B)}</b></div>
+    </div>
+    <p class="foot">Los valores son estimados y están redondeados al peso.<br>Página realizada por tidreams</p>`;
+}
 
-    function removePackaging(index) {
-      packagings.splice(index, 1);
-      renderPackagings();
-    }
+/* ---------- Recetas guardadas ---------- */
+const readStore = () => { try { return JSON.parse(localStorage.getItem(STORE) || '{}'); } catch { return {}; } };
+const writeStore = data => { try { localStorage.setItem(STORE, JSON.stringify(data)); return true; } catch { return false; } };
 
-    function addSaleRow() {
-      const currentName = document.getElementById("recipeName").value || "Producto";
-      const currentUnitCostText = document.getElementById("resUnitCost").innerText.replace("$", "");
-      const currentUnitPriceText = document.getElementById("resUnitPrice").innerText.replace("$", "");
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast.id); toast.id = setTimeout(() => t.classList.remove('show'), 2400);
+}
 
-      sales.push({ 
-        name: currentName, 
-        unitCost: parseFloat(currentUnitCostText) || 0, 
-        unitPrice: parseFloat(currentUnitPriceText) || 0, 
-        qtySold: 1 
-      });
-      renderSales();
-    }
+function saveRecipe() {
+  const name = $('name').value.trim();
+  if (!name) return toast('Escribe un nombre para guardar la receta.');
+  const c = readConfig(), recipes = readStore();
+  recipes[name] = {
+    name, format: $('format').value, perPack: $('perPack').value, batches: $('batches').value, margin: $('margin').value,
+    useOv: c.useOv, ovPct: $('ovPct').value, useLab: c.useLab, hours: $('hours').value, rate: $('rate').value,
+    ingredients: state.ingredients, packagings: state.packagings
+  };
+  toast(writeStore(recipes) ? `Receta “${name}” guardada.` : 'No se pudo guardar en este navegador.');
+  renderSaved();
+}
 
-    function removeSale(index) {
-      sales.splice(index, 1);
-      renderSales();
-    }
+function loadRecipe(name) {
+  const r = readStore()[name]; if (!r) return;
+  $('name').value = r.name; $('format').value = r.format || r.sellFormat || 'unit';
+  $('perPack').value = r.perPack || r.unitsPerPack || 1; $('batches').value = r.batches || r.units || 1;
+  $('margin').value = r.margin ?? 0; $('ovPct').value = r.ovPct ?? r.overheadPercent ?? 10;
+  $('hours').value = r.hours ?? r.laborHours ?? 0; $('rate').value = r.rate ?? r.laborRate ?? 0;
+  $('useOv').checked = r.useOv ?? num($('ovPct').value) > 0;
+  $('useLab').checked = r.useLab ?? num($('hours').value) * num($('rate').value) > 0;
+  state.ingredients = r.ingredients || []; state.packagings = r.packagings || [];
+  renderIngredients(); renderPackagings();
+  toast(`Receta “${name}” cargada.`);
+}
 
-    function calcularTotales() {
-      const units = parseFloat(document.getElementById("unitsProduced").value) || 1;
-      const margin = parseFloat(document.getElementById("profitMargin").value) || 0;
-      const overheadPercent = parseFloat(document.getElementById("overheadPercent").value) || 0;
-      const laborHours = parseFloat(document.getElementById("laborHours").value) || 0;
-      const laborRate = parseFloat(document.getElementById("laborRate").value) || 0;
+function deleteRecipe(name) {
+  if (!confirm(`¿Eliminar la receta “${name}”?`)) return;
+  const recipes = readStore(); delete recipes[name]; writeStore(recipes); renderSaved();
+}
 
-      document.getElementById("countUnitsLabel").innerText = units;
-      document.getElementById("resUnitsLabel").innerText = units;
-      document.getElementById("resUnitsLabel2").innerText = units;
+function renderSaved() {
+  const keys = Object.keys(readStore());
+  $('saved').innerHTML = keys.length ? keys.map(k => `<div class="saved"><strong>${esc(k)}</strong><span>
+    <button class="btn soft" data-load="${esc(k)}">Cargar</button>
+    <button class="btn ghost" data-drop="${esc(k)}">Eliminar</button></span></div>`).join('')
+    : '<p class="empty">Aún no hay recetas guardadas en este navegador.</p>';
+}
 
-      const unitIngredientsCost = ingredients.reduce((sum, ing) => sum + calculateIngredientCost(ing), 0);
-      const batchIngredientsCost = unitIngredientsCost * units;
-
-      const unitPackagingCost = packagings.reduce((sum, pack) => sum + calculatePackagingCost(pack), 0);
-      const batchPackagingCost = unitPackagingCost * units;
-
-      const overheadCost = batchIngredientsCost * (overheadPercent / 100);
-      const laborCost = laborHours * laborRate;
-      const totalIndirect = overheadCost + laborCost;
-
-      const totalBatchCost = batchIngredientsCost + batchPackagingCost + totalIndirect;
-      const unitCost = totalBatchCost / units;
-
-      const rawUnitPrice = unitCost * (1 + (margin / 100));
-      const roundedUnitPrice = redondearComercial(rawUnitPrice);
-      const roundedBatchPrice = roundedUnitPrice * units;
-      const batchProfit = roundedBatchPrice - totalBatchCost;
-
-      document.getElementById("badgeSubtotalIngredients").innerText = `$${unitIngredientsCost.toFixed(2)}`;
-      document.getElementById("tableSubtotalIngredients").innerText = `$${unitIngredientsCost.toFixed(2)}`;
-      document.getElementById("batchIngredientsTotal").innerText = `$${batchIngredientsCost.toFixed(2)}`;
-
-      document.getElementById("badgeSubtotalPackaging").innerText = `$${unitPackagingCost.toFixed(2)}`;
-      document.getElementById("tableSubtotalPackaging").innerText = `$${unitPackagingCost.toFixed(2)}`;
-
-      document.getElementById("resIngredientsTotal").innerText = `$${redondearComercial(batchIngredientsCost)}`;
-      document.getElementById("resPackagingTotal").innerText = `$${redondearComercial(batchPackagingCost)}`;
-      document.getElementById("resOverheadTotal").innerText = `$${redondearComercial(totalIndirect)}`;
-      document.getElementById("resTotalBatch").innerText = `$${redondearComercial(totalBatchCost)}`;
-      document.getElementById("resUnitCost").innerText = `$${redondearComercial(unitCost)}`;
-      document.getElementById("resBatchPrice").innerText = `$${roundedBatchPrice}`;
-      document.getElementById("resUnitPrice").innerText = `$${roundedUnitPrice}`;
-      document.getElementById("resBatchProfit").innerText = `$${redondearComercial(batchProfit)}`;
-    }
-
-    function calcularCuadre() {
-      let totalVenta = 0;
-      let totalInversion = 0;
-
-      sales.forEach(s => {
-        totalVenta += (s.unitPrice * s.qtySold);
-        totalInversion += (s.unitCost * s.qtySold);
-      });
-
-      let totalGanancia = totalVenta - totalInversion;
-
-      document.getElementById("cuadreTotalVenta").innerText = `$${redondearComercial(totalVenta)}`;
-      document.getElementById("cuadreTotalInversion").innerText = `$${redondearComercial(totalInversion)}`;
-      document.getElementById("cuadreTotalGanancia").innerText = `$${redondearComercial(totalGanancia)}`;
-    }
-
-    function saveRecipe() {
-      const name = document.getElementById("recipeName").value.trim();
-      if (!name) {
-        alert("Por favor ingresa un nombre para la receta.");
-        return;
-      }
-
-      const recipeData = {
-        name: name,
-        units: document.getElementById("unitsProduced").value,
-        margin: document.getElementById("profitMargin").value,
-        overheadPercent: document.getElementById("overheadPercent").value,
-        laborHours: document.getElementById("laborHours").value,
-        laborRate: document.getElementById("laborRate").value,
-        ingredients: ingredients,
-        packagings: packagings
-      };
-
-      let recipes = JSON.parse(localStorage.getItem("pastry_recipes") || "{}");
-      recipes[name] = recipeData;
-      localStorage.setItem("pastry_recipes", JSON.stringify(recipes));
-
-      alert(`¡Receta "${name}" guardada con éxito!`);
-      loadSavedRecipesList();
-    }
-
-    function loadRecipe(name) {
-      let recipes = JSON.parse(localStorage.getItem("pastry_recipes") || "{}");
-      const recipe = recipes[name];
-      if (!recipe) return;
-
-      document.getElementById("recipeName").value = recipe.name;
-      document.getElementById("unitsProduced").value = recipe.units || 1;
-      document.getElementById("profitMargin").value = recipe.margin;
-      document.getElementById("overheadPercent").value = recipe.overheadPercent || 10;
-      document.getElementById("laborHours").value = recipe.laborHours || 0;
-      document.getElementById("laborRate").value = recipe.laborRate || 0;
-
-      ingredients = recipe.ingredients || [];
-      packagings = recipe.packagings || [];
-
-      renderIngredients();
-      renderPackagings();
-    }
-
-    function deleteRecipe(name) {
-      if (confirm(`¿Seguro que deseas eliminar la receta "${name}"?`)) {
-        let recipes = JSON.parse(localStorage.getItem("pastry_recipes") || "{}");
-        delete recipes[name];
-        localStorage.setItem("pastry_recipes", JSON.stringify(recipes));
-        loadSavedRecipesList();
-      }
-    }
-
-    function loadSavedRecipesList() {
-      const container = document.getElementById("savedList");
-      let recipes = JSON.parse(localStorage.getItem("pastry_recipes") || "{}");
-      const keys = Object.keys(recipes);
-
-      if (keys.length === 0) {
-        container.innerHTML = `<p style="color:#888;">No hay recetas guardadas en el navegador.</p>`;
-        return;
-      }
-
-      container.innerHTML = "";
-      keys.forEach(key => {
-        const item = document.createElement("div");
-        item.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #ddd;";
-        item.innerHTML = `
-          <strong>${key}</strong>
-          <div>
-            <button class="btn" style="padding:4px 10px; font-size:0.85em;" onclick="loadRecipe('${key}')">Cargar</button>
-            <button class="btn btn-danger" style="font-size:0.85em;" onclick="deleteRecipe('${key}')">Eliminar</button>
-          </div>
-        `;
-        container.appendChild(item);
-      });
-    }
-
-    window.onload = () => {
-      renderIngredients();
-      renderPackagings();
-      renderSales();
-      loadSavedRecipesList();
-    };
-  </script>
-
+/* ---------- Inicio ---------- */
+renderIngredients(); renderPackagings(); renderSales(); renderSaved();
+</script>
 </body>
 </html>
